@@ -2,9 +2,12 @@
 """Generate the theme's bitmap assets without any image library.
 
 Writes:
-  art/white.png            8x8 opaque white, tinted by the theme (rows, cards, bars)
-  art/systems/default.png  64x48 dark gradient, the hero placeholder for
-                           systems that have no art/systems/<theme>.png
+  art/white.png  8x8 opaque white, tinted by the theme (rows, cards, bars)
+
+art/systems/default.png used to be generated here too - a flat gradient
+standing in for the system banner. It is artwork now, so this tool leaves
+it alone; regenerating it would paint over the banner. The old generator
+is in the history if the placeholder is ever wanted back.
 
 Run from anywhere: `python3 tools/gen-assets.py`.
 """
@@ -42,21 +45,6 @@ def main():
     w = h = 8
     write_png(os.path.join(ROOT, "art", "white.png"), w, h,
               [bytes([255, 255, 255, 255]) * w for _ in range(h)], alpha=True)
-
-    # systems/default.png: top #1a2033 -> bottom #10141f, with a faint
-    # diagonal banding so it does not read as a flat fill.
-    w, h = 64, 48
-    top, bottom = (0x1A, 0x20, 0x33), (0x10, 0x14, 0x1F)
-    rows = []
-    for y in range(h):
-        t = y / (h - 1)
-        base = [lerp(top[i], bottom[i], t) for i in range(3)]
-        row = bytearray()
-        for x in range(w):
-            band = 4 if ((x + y) // 6) % 2 == 0 else 0
-            row += bytes(min(255, c + band) for c in base)
-        rows.append(bytes(row))
-    write_png(os.path.join(ROOT, "art", "systems", "default.png"), w, h, rows, alpha=False)
     print("assets written")
 
 

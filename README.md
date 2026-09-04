@@ -43,7 +43,7 @@ art/logo.png         the RelicOS mark, cut out of the boot splash artwork
                      by tools/crop-logo.py
 art/logos/           console logos, one SVG per system
 art/systems/         hero art, one PNG per <theme> name from es_systems.cfg
-                     (default.png is the placeholder)
+                     (default.png is the banner every system falls back to)
 art/icons/           battery glyphs (SVG)
 art/fonts/           IBM Plex (not committed; see below)
 tools/               asset generator and font fetcher
@@ -86,10 +86,21 @@ is the folder name.
 
 ## Adding system art
 
-Drop a 640x240 (or larger, same 8:3 ratio) PNG at
-`art/systems/<theme>.png`, where `<theme>` is the `<theme>` tag of the
-system in `es_systems.cfg` (`gb`, `snes`, ...). It is cropped to fill the
-top half of the system view and darkened towards the bottom.
+`art/systems/default.png` is the banner across the top half of the system
+view. It is the same for every system: original artwork for RelicOS, so
+unlike the fonts and the console logos it is covered by the licence above.
+
+A system can have its own instead - drop a 640x240 (or larger, same 8:3
+ratio) PNG at `art/systems/<theme>.png`, where `<theme>` is the `<theme>`
+tag of the system in `es_systems.cfg` (`gb`, `snes`, ...), the same names
+the logos use. It is cropped to fill the banner and darkened towards the
+bottom, and it covers the default.
+
+The darkening is `heroFade` in `views/system.xml`, and where it starts is
+a real choice: a gradient running the whole height keeps the system name
+legible but washes the artwork out. It starts at 72px, so the top of the
+banner is untouched and only the lower half fades, reaching the background
+exactly where the artwork stops so there is no seam.
 
 Console logos work the same way: an SVG at `art/logos/<theme>.svg` takes
 the place of the console's name on the system rail. Systems without a file

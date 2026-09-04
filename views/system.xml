@@ -64,11 +64,16 @@
       <linearSmooth>true</linearSmooth>
       <zIndex>2</zIndex>
     </image>
+    <!-- The banner has to reach the background cleanly and the system name
+         has to stay legible on top of it, but a gradient running the whole
+         height washes the art out. This one starts at 72px, so the sky and
+         the top of the artwork are untouched and only the lower half fades,
+         ending fully opaque at 240 so there is no seam where the art stops. -->
     <image name="heroFade" extra="true">
       <path>${white}</path>
-      <pos>0 0</pos>
-      <size>1 0.5</size>
-      <color>0b0d1333</color>
+      <pos>0 0.15</pos>
+      <size>1 0.35</size>
+      <color>0b0d1300</color>
       <colorEnd>${bg}</colorEnd>
       <gradientType>vertical</gradientType>
       <zIndex>3</zIndex>
