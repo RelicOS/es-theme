@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SYSTEM TILES = NAMES. See views/tiles-logos.xml. This one makes the rail
+  ignore art/logos/ entirely and always draw the system's name.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+  <variables>
+    <tileLogos>0</tileLogos>
+  </variables>
+</theme>

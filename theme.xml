@@ -74,6 +74,16 @@
     <fsMenuGroup>0.0270</fsMenuGroup> <!-- 15px, the category headers -->
   </variables>
 
+  <!-- Logos or names on the system rail, offered to the user in
+       UI SETTINGS > THEME CONFIGURATION (and per console under that
+       system's VIEW CUSTOMIZATION). The ES parses only the include that
+       matches the choice, and the first one listed is the default, so
+       this has to come before ./views/system.xml reads ${tileLogos}. -->
+  <subset name="systemtile" displayName="SYSTEM TILES" appliesTo="system">
+    <include name="logos" displayName="LOGOS, NAMES WHERE MISSING">./views/tiles-logos.xml</include>
+    <include name="names" displayName="NAMES">./views/tiles-names.xml</include>
+  </subset>
+
   <include>./views/chrome.xml</include>
   <include>./views/system.xml</include>
   <include>./views/basic.xml</include>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 177.00 100.00" width="177.00" height="100.00">
+<!-- Favourites: the same five-pointed star the game lists use.
+     The box is wider than the mark on purpose: the tile fits a logo
+     into 99px, so a square icon would dwarf the console wordmarks
+     beside it. This padding lands it at about 56px. -->
+<g transform="translate(38.50,0)"><path d="M50.00,0.00L63.81,30.99L97.55,34.55L72.35,57.26L79.39,90.45L50.00,73.50L20.61,90.45L27.65,57.26L2.45,34.55L36.19,30.99Z" fill="#FFFFFF"/></g>
+</svg>

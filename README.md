@@ -41,6 +41,7 @@ gamesplash.xml       the screen shown while a game boots (cover + name).
 art/white.png        the one bitmap every tinted rectangle is made of
 art/logo.png         the RelicOS mark, cut out of the boot splash artwork
                      by tools/crop-logo.py
+art/logos/           console logos, one SVG per system
 art/systems/         hero art, one PNG per <theme> name from es_systems.cfg
                      (default.png is the placeholder)
 art/icons/           battery glyphs (SVG)
@@ -88,9 +89,37 @@ is the folder name.
 Drop a 640x240 (or larger, same 8:3 ratio) PNG at
 `art/systems/<theme>.png`, where `<theme>` is the `<theme>` tag of the
 system in `es_systems.cfg` (`gb`, `snes`, ...). It is cropped to fill the
-top half of the system view and darkened towards the bottom. A per-system
-logo can replace the text tile the same way: uncomment the `logo` element in
-`views/system.xml` and add `art/logos/<theme>.svg`.
+top half of the system view and darkened towards the bottom.
+
+Console logos work the same way: an SVG at `art/logos/<theme>.svg` takes
+the place of the console's name on the system rail. Systems without a file
+keep their name, so the folder can be filled in a few at a time. Whether
+logos are used at all is the user's choice, in **UI SETTINGS > THEME
+CONFIGURATION > SYSTEM TILES** (`NAMES` forces names even where a logo
+exists), and it can be set per console from that system's VIEW
+CUSTOMIZATION. 70 of them ship, redrawn by Dan Patrick and used with his
+permission; `art/logos/README.md` has the provenance and what the tile
+expects of the artwork.
+
+Artwork exported from Illustrator needs a pass through
+`tools/convert-logos.py` first: the ES rasterises SVG with nanosvg, which
+has no CSS parser, so colours declared as class rules are dropped and the
+logo draws solid black. `tools/check-logos.c` rasterises through that same
+nanosvg to prove a logo is actually visible.
+
+The collections carry a drawn mark rather than a word - a star for
+favorites, four tiles for all games - because the ES names a collection by
+its internal id, which stays English in every interface language, and a
+drawn word would too. `ports` is an ordinary system, so it keeps its name,
+set in the theme's own type by `tools/make-wordmark.py`: that reads the
+TrueType outlines out of IBM Plex and writes them as SVG paths, since
+nanosvg will not render `<text>`.
+
+That option is an ES *subset*: `theme.xml` declares it and the ES parses
+only the `views/tiles-*.xml` that matches the choice, each of which sets
+one variable the tile template reads. Subsets are only honoured when the
+theme declares `formatVersion` 7 - at 6 or lower the ES parses includes
+before views and ignores `<subset>` entirely.
 
 ## Status
 

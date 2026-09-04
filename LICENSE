@@ -22,3 +22,8 @@ SOFTWARE.
 
 The IBM Plex fonts fetched by tools/fetch-fonts.sh are licensed separately
 under the SIL Open Font License 1.1 (see art/fonts/OFL.txt after fetching).
+
+The console logos in art/logos/ are not covered by the licence above. They
+are third-party artwork used with their author's permission, on the terms
+recorded in art/logos/README.md, and the trademarks they depict belong to
+their respective owners.

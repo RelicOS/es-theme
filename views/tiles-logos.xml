@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  SYSTEM TILES = LOGOS. One of the two files behind the subset declared in
+  theme.xml; the ES includes whichever one the user picked and skips the
+  other. All it does is set the flag views/system.xml reads.
+
+  A tile still falls back to the system's name when there is no logo file
+  for it, so this option is safe to leave on with a half-filled
+  art/logos/.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+  <variables>
+    <tileLogos>1</tileLogos>
+  </variables>
+</theme>

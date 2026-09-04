@@ -186,14 +186,19 @@
             <animation property="color" to="${panelOnBg}" duration="150"/>
           </storyboard>
         </image>
+        <!-- ${tileLogos} is the SYSTEM TILES option from theme.xml: 1 for
+             logos, 0 for names. {system:logo} is not a file the ES knows
+             about - it resolves to the path on the <image name="logo">
+             element below, per system - so exists() is what decides
+             whether this console actually has artwork. -->
         <image name="tileLogo" pos="0.5 0.5" origin="0.5 0.5" maxSize="0.8 0.8">
-          <visible>exists({system:logo})</visible>
+          <visible>${tileLogos} &amp;&amp; exists({system:logo})</visible>
           <path>{system:logo}</path>
           <linearSmooth>true</linearSmooth>
           <zIndex>4</zIndex>
         </image>
         <text name="tileName" pos="0 0" size="1 1">
-          <visible>!exists({system:logo})</visible>
+          <visible>${tileLogos} == 0 || !exists({system:logo})</visible>
           <text>{system:name}</text>
           <alignment>center</alignment>
           <verticalAlignment>center</verticalAlignment>
@@ -214,7 +219,9 @@
         </container>
       </itemTemplate>
     </carousel>
-    <!-- Drop an SVG at art/logos/<system.theme>.svg to replace the text tile -->
+    <!-- Where a system's logo lives. This element is never drawn: the ES
+         exposes its path as {system:logo}, and the tile template above
+         reads it. See art/logos/README.md. -->
     <image name="logo">
       <path>${themePath}/art/logos/${system.theme}.svg</path>
     </image>

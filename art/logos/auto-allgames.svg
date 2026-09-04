@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 177.00 100.00" width="177.00" height="100.00">
+<!-- All games: four tiles, echoing the grid view and the rail's own
+     rounded squares. A mark rather than a word because the ES
+     translates collection names and a drawn word cannot follow.
+     The box is wider than the mark on purpose: the tile fits a logo
+     into 99px, so a square icon would dwarf the console wordmarks
+     beside it. This padding lands it at about 56px. -->
+<g transform="translate(38.50,0)"><rect x="0.00" y="0.00" width="44.00" height="44.00" rx="9.68" fill="#FFFFFF"/><rect x="56.00" y="0.00" width="44.00" height="44.00" rx="9.68" fill="#FFFFFF"/><rect x="0.00" y="56.00" width="44.00" height="44.00" rx="9.68" fill="#FFFFFF"/><rect x="56.00" y="56.00" width="44.00" height="44.00" rx="9.68" fill="#FFFFFF"/></g>
+</svg>
