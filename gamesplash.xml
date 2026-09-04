@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The screen the ES shows while a game boots. Same loader as splash.xml
+  (Splash.cpp) with fullScreenBackGround off, read by name from the theme
+  root, so the palette is repeated here too - keep the three files in step.
+
+  The ES hands this screen the game's own cover as the background image
+  and the game's name as the label, and binds every element to the game,
+  so {game:...} works. `background` names the cover explicitly rather than
+  taking the one the ES passes: when a game has no cover the ES falls back
+  to its bundled batocera logo, and binding the path instead leaves the
+  plate behind it showing - which is what should happen.
+
+  There is no progress bar here: the ES never sets a percentage on a game
+  splash, so the bar in splash.xml has no counterpart.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <variables>
+    <bg>0b0d13FF</bg>
+    <fg>eef1f7FF</fg>
+    <accent>8fb0ffFF</accent>
+    <line>eef1f71A</line>
+    <panelOnBg>15171DFF</panelOnBg>
+    <white>${themePath}/art/white.png</white>
+    <fontSansBold>${themePath}/art/fonts/IBMPlexSans-Bold.ttf</fontSansBold>
+    <fontMonoMedium>${themePath}/art/fonts/IBMPlexMono-Medium.ttf</fontMonoMedium>
+  </variables>
+
+  <view name="splash">
+    <splash name="splash">
+      <backgroundColor>${bg}</backgroundColor>
+    </splash>
+
+    <!-- The plate the cover sits on: a hairline ring and a panel fill, the
+         same 168x224 box the cover is fitted into. Extras below zIndex 5
+         are drawn before the background image, so the cover lands on top. -->
+    <image name="plateFrame" extra="true">
+      <path>${white}</path>
+      <pos>0.5 0.4083</pos>
+      <origin>0.5 0.5</origin>
+      <size>0.2625 0.4667</size>
+      <color>${line}</color>
+      <roundCorners>10</roundCorners>
+      <zIndex>1</zIndex>
+    </image>
+    <image name="plate" extra="true">
+      <path>${white}</path>
+      <pos>0.5 0.4083</pos>
+      <origin>0.5 0.5</origin>
+      <size>0.2563 0.4583</size>
+      <color>${panelOnBg}</color>
+      <roundCorners>8</roundCorners>
+      <zIndex>2</zIndex>
+    </image>
+
+    <image name="background">
+      <path>{game:image}</path>
+      <pos>0.5 0.4083</pos>
+      <origin>0.5 0.5</origin>
+      <maxSize>0.25 0.45</maxSize>
+      <roundCorners>6</roundCorners>
+      <linearSmooth>true</linearSmooth>
+    </image>
+
+    <!-- The label is the game's name; the ES fills the text itself. -->
+    <text name="label">
+      <pos>0.05 0.7042</pos>
+      <size>0.9 0.0708</size>
+      <alignment>center</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontSansBold}</fontPath>
+      <fontSize>0.0382</fontSize>
+      <color>${fg}</color>
+    </text>
+
+    <text name="sysline" extra="true">
+      <text>{game:systemName}</text>
+      <pos>0.05 0.7917</pos>
+      <size>0.9 0.0292</size>
+      <alignment>center</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>0.0207</fontSize>
+      <forceUppercase>true</forceUppercase>
+      <color>${accent}</color>
+      <multiLine>false</multiLine>
+      <zIndex>10</zIndex>
+    </text>
+  </view>
+</theme>

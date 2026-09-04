@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  gamecarousel: one big cover in the middle, a dimmed neighbour on each
+  side, title + "YEAR · GENRE · NP" and the rating below (design 3c).
+
+  Every item is a card drawn by the carousel's itemTemplate - ring, plate
+  and cover - so the frame travels and grows with the item instead of
+  standing still in the middle while the covers slide past it, and a game
+  with no cover shows its name on the plate rather than nothing at all.
+
+  Geometry, measured at 640x480. The column is laid out from both ends:
+  the card sits 17px under the header hairline (y 53) and the rating sits
+  19px over the footer hairline (y 445), and everything in between is
+  divided up so the card gets the same 17px of air above it and below it.
+
+    card        69..330   186x261, the selected one
+    title      348..384   30px bold
+    metadata   388..403   13px mono
+    rating     412..426   five stars
+
+  Slot spacing is always width / maxLogoCount and the carousel clips to
+  its own bounds, so the band is sized around the card. Five slots of
+  152px make the band 760px wide, hanging 60px off each side of the
+  screen. scaledLogoSpacing pushes the unselected cards 24px outwards -
+  half the difference between the two card widths - which is what makes
+  every gap the same 14px. Card centres land on -8, 144, 320, 496 and
+  648: the middle one at 227..413, its neighbours 138px wide beside it,
+  and the outer two running off the screen edges. What the clip cuts off
+  is past the screen edge anyway.
+
+  logoScale is 1.348, the same ratio the system rail uses, so an
+  unselected card is 138x194 against the selected 186x261 - close enough
+  in size that the accent ring and the dimming carry the selection.
+
+  logoSize and logoPos in a gamecarousel are relative to the band itself
+  (in the system view they are relative to the screen).
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="gamecarousel">
+    <gamecarousel name="gamecarousel">
+      <type>horizontal</type>
+      <pos>-0.09375 0.125</pos>
+      <size>1.1875 0.5833</size>
+      <origin>0 0</origin>
+      <color>${transparent}</color>
+      <colorEnd>${transparent}</colorEnd>
+      <logoSize>0.1816 0.6918</logoSize>
+      <logoScale>1.3478</logoScale>
+      <scaledLogoSpacing>0.908</scaledLogoSpacing>
+      <maxLogoCount>5</maxLogoCount>
+      <logoAlignment>center</logoAlignment>
+      <minLogoOpacity>0.55</minLogoOpacity>
+      <zIndex>20</zIndex>
+      <!-- The ring is the 2px gap between two filled rounded rectangles,
+           and the plate another 2px inside it, because `rectangle` never
+           draws its border on this ES (see the README). The cover is
+           fitted inside all of that, so a 3:4 cover leaves the ring and a
+           thin mat showing and anything else gets more mat. -->
+      <itemTemplate>
+        <image name="coverFrame" pos="0 0" size="1 1">
+          <path>${white}</path>
+          <color>${line}</color>
+          <roundCorners>10</roundCorners>
+          <zIndex>1</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${accent}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${line}" duration="150"/>
+          </storyboard>
+        </image>
+        <image name="coverPlate" pos="0.5 0.5" origin="0.5 0.5" size="0.9785 0.9847">
+          <path>${white}</path>
+          <color>${panelOnBg}</color>
+          <roundCorners>8</roundCorners>
+          <zIndex>2</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${accentTintOnBg}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${panelOnBg}" duration="150"/>
+          </storyboard>
+        </image>
+        <text name="coverName" pos="0.1 0.5" origin="0 0.5" size="0.8 0.8">
+          <visible>!exists({game:image})</visible>
+          <text>{game:name}</text>
+          <alignment>center</alignment>
+          <verticalAlignment>center</verticalAlignment>
+          <fontPath>${fontSansSemiBold}</fontPath>
+          <fontSize>${fsCard}</fontSize>
+          <lineSpacing>1.2</lineSpacing>
+          <color>${fgMuted}</color>
+          <zIndex>3</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${fg}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${fgMuted}" duration="150"/>
+          </storyboard>
+        </text>
+        <image name="cover" pos="0.5 0.5" origin="0.5 0.5" maxSize="0.957 0.9693">
+          <visible>exists({game:image})</visible>
+          <path>{game:image}</path>
+          <roundCorners>6</roundCorners>
+          <linearSmooth>true</linearSmooth>
+          <zIndex>4</zIndex>
+        </image>
+      </itemTemplate>
+    </gamecarousel>
+
+    <!-- Title and metadata line -->
+    <text name="md_name">
+      <pos>0.05 0.725</pos>
+      <size>0.9 0.075</size>
+      <alignment>center</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontSansBold}</fontPath>
+      <fontSize>${fsTitle}</fontSize>
+      <color>${fg}</color>
+      <multiLine>false</multiLine>
+      <zIndex>40</zIndex>
+    </text>
+    <text name="metaLine" extra="true">
+      <text>{game:releaseyear} + " · " + {game:genre} + " · " + {game:players} + "P"</text>
+      <pos>0.05 0.8083</pos>
+      <size>0.9 0.032</size>
+      <alignment>center</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <forceUppercase>true</forceUppercase>
+      <color>${accent}</color>
+      <multiLine>false</multiLine>
+      <zIndex>40</zIndex>
+    </text>
+
+    <!-- The ES's own rating: it paints five stars and then the filled
+         part over them, so the empty ones are always shown. -->
+    <!-- Width 0 makes the ES size the row to exactly five stars of the
+         given height, so with origin 0.5 it centres on the cover and the
+         title. Its own "center" alignment does not exist - the component
+         only knows left and right, and falls back to left. -->
+    <rating name="md_rating">
+      <pos>0.5 0.8729</pos>
+      <origin>0.5 0.5</origin>
+      <size>0 0.0292</size>
+      <color>${accent}</color>
+      <unfilledColor>${starOff}</unfilledColor>
+      <unfilledPath>:/star_filled.svg</unfilledPath>
+      <zIndex>40</zIndex>
+    </rating>
+
+    <!-- Nothing else from the detailed container -->
+    <text name="md_lbl_rating, md_lbl_releasedate, md_lbl_developer, md_lbl_publisher, md_lbl_genre, md_lbl_players, md_lbl_lastplayed, md_lbl_playcount, md_lbl_gametime, md_developer, md_publisher, md_genre, md_players, md_playcount, md_gametime, md_description">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </text>
+    <datetime name="md_releasedate, md_lastplayed">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </datetime>
+  </view>
+</theme>

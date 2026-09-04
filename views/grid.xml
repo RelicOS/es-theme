@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  grid: 3x2 cover cards, 12px gutters (design 3b).
+  Each card is an itemTemplate: rounded panel, hairline border, the cover
+  fitted in the top 76%, then the name with a favourite star beside it and
+  a line with the year and the game's rating. The selected card gets the
+  accent tint, a 2px accent border, white name and accent year. No zoom on
+  selection: the card grid stays put.
+
+  The border is the gap between two filled rounded rectangles: `rectangle`
+  reads borderColor and borderSize and then never draws them on this ES
+  (see the README), so the two `rectangle` borders that used to be here
+  were invisible.
+
+  The name is {game:name} rather than {grid:label} for the same reason as
+  in views/basic.xml - the ES's label already carries a favourite star as
+  a prefix, which is where the duplicate star came from.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="grid">
+    <imagegrid name="gamegrid">
+      <pos>0.01875 0.1354</pos>
+      <size>0.9625 0.7667</size>
+      <margin>0.01875 0.025</margin>
+      <padding>0 0 0 0</padding>
+      <autoLayout>3 2</autoLayout>
+      <autoLayoutSelectedZoom>1</autoLayoutSelectedZoom>
+      <animateSelection>false</animateSelection>
+      <centerSelection>false</centerSelection>
+      <scrollLoop>false</scrollLoop>
+      <scrollbarColor>${transparent}</scrollbarColor>
+      <zIndex>20</zIndex>
+      <itemTemplate>
+        <container>
+          <pos>0 0</pos>
+          <size>1 1</size>
+          <image name="cardFrame">
+            <path>${white}</path>
+            <pos>0 0</pos>
+            <size>1 1</size>
+            <color>${line}</color>
+            <roundCorners>10</roundCorners>
+            <zIndex>1</zIndex>
+            <storyboard event="activate">
+              <animation property="color" to="${accent}" duration="120"/>
+            </storyboard>
+            <storyboard event="deactivate">
+              <animation property="color" to="${line}" duration="120"/>
+            </storyboard>
+          </image>
+          <image name="cardBg">
+            <path>${white}</path>
+            <pos>0.5 0.5</pos>
+            <origin>0.5 0.5</origin>
+            <size>0.9797 0.9775</size>
+            <color>${panelOnBg}</color>
+            <roundCorners>8</roundCorners>
+            <zIndex>2</zIndex>
+            <storyboard event="activate">
+              <animation property="color" to="${accentTintOnBg}" duration="120"/>
+            </storyboard>
+            <storyboard event="deactivate">
+              <animation property="color" to="${panelOnBg}" duration="120"/>
+            </storyboard>
+          </image>
+          <image name="cardCover">
+            <path>{game:image}</path>
+            <default>:/cartridge.svg</default>
+            <pos>0.5 0.382</pos>
+            <origin>0.5 0.5</origin>
+            <maxSize>0.88 0.68</maxSize>
+            <roundCorners>4</roundCorners>
+            <linearSmooth>true</linearSmooth>
+            <color>FFFFFFD0</color>
+            <zIndex>3</zIndex>
+            <storyboard event="activate">
+              <animation property="color" to="FFFFFFFF" duration="120"/>
+            </storyboard>
+            <storyboard event="deactivate">
+              <animation property="color" to="FFFFFFD0" duration="120"/>
+            </storyboard>
+          </image>
+          <container name="cardLabel">
+            <pos>0 0.764</pos>
+            <size>1 0.236</size>
+            <padding>10 0 10 0</padding>
+            <stackpanel name="cardTitle" pos="0 0.08" size="1 0.5">
+              <orientation>horizontal</orientation>
+              <separator>5</separator>
+              <text name="cardName">
+                <text>{game:name}</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsCard}</fontSize>
+                <color>${fgStrong}</color>
+                <multiLine>false</multiLine>
+                <autoScrollDelay>400</autoScrollDelay>
+                <storyboard event="activate">
+                  <animation property="color" to="${fg}" duration="120"/>
+                  <animation property="singleLineScroll" to="true"/>
+                </storyboard>
+                <storyboard event="deactivate">
+                  <animation property="color" to="${fgStrong}" duration="120"/>
+                  <animation property="singleLineScroll" to="false"/>
+                </storyboard>
+              </text>
+              <text name="cardStar">
+                <text>{game:favorite} ? "★" : ""</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsMonoSmall}</fontSize>
+                <color>${accent}</color>
+                <multiLine>false</multiLine>
+              </text>
+            </stackpanel>
+            <text name="cardYear" pos="0 0.56" size="0.4 0.38">
+              <text>{game:releaseyear}</text>
+              <alignment>left</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <fontPath>${fontMono}</fontPath>
+              <fontSize>${fsMonoTiny}</fontSize>
+              <color>${fgSoft}</color>
+              <multiLine>false</multiLine>
+              <storyboard event="activate">
+                <animation property="color" to="${accent}" duration="120"/>
+              </storyboard>
+              <storyboard event="deactivate">
+                <animation property="color" to="${fgSoft}" duration="120"/>
+              </storyboard>
+            </text>
+            <!-- Rating: five empty stars with the filled ones laid over
+                 them, both left-aligned from the same x so the glyphs line
+                 up. It is two texts rather than a `rating` element because
+                 a templated rating has no way to receive its value: the ES
+                 binds a float property through GuiComponent::setProperty,
+                 which knows nothing about `value`. U+F005 and U+F006 are
+                 the ES's own filled and empty stars, same advance width.
+
+                 The x is computed, not eyeballed. A card is 197.3 wide
+                 (imagegrid 616px, three columns, 12px gutters) less the
+                 10px of padding each side, so the label has 177.3px of
+                 content. ${fsMonoTiny} lands on a 10px font - the ES
+                 truncates fontSize x 480 to an int and then x1.31 the
+                 same way - and both star glyphs advance 1664/1792 em in
+                 the ES's fontawesome-webfont.ttf, so five of them are
+                 5 x 1664 x 10 / 1792 = 46.4px. Starting at
+                 (177.3 - 46.4) / 177.3 = 0.738 puts the last star on the
+                 right edge, level with where the year starts on the left.
+                 The box is wider than the text on purpose: nothing clips
+                 it, and a box cut to the exact width would risk an
+                 ellipsis. Both texts stay left-aligned - right-aligning
+                 them would push the filled stars past the empty ones. -->
+            <text name="cardRatingOff" pos="0.738 0.56" size="0.30 0.38">
+              <visible>{game:rating} > 0</visible>
+              <text>&#xF006;&#xF006;&#xF006;&#xF006;&#xF006;</text>
+              <alignment>left</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <fontSize>${fsMonoTiny}</fontSize>
+              <color>${starOff}</color>
+              <multiLine>false</multiLine>
+            </text>
+            <text name="cardRatingOn" pos="0.738 0.56" size="0.30 0.38">
+              <text>{game:stars}</text>
+              <alignment>left</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <fontSize>${fsMonoTiny}</fontSize>
+              <color>${accent}</color>
+              <multiLine>false</multiLine>
+            </text>
+          </container>
+        </container>
+      </itemTemplate>
+    </imagegrid>
+
+    <!-- The stock tile and its label are replaced by the template -->
+    <gridtile name="default">
+      <backgroundColor>${transparent}</backgroundColor>
+      <padding>0 0</padding>
+    </gridtile>
+    <gridtile name="selected">
+      <backgroundColor>${transparent}</backgroundColor>
+    </gridtile>
+    <text name="gridtile">
+      <visible>false</visible>
+    </text>
+
+    <!-- Metadata ES might place on the grid view: off -->
+    <text name="md_lbl_rating, md_lbl_releasedate, md_lbl_developer, md_lbl_publisher, md_lbl_genre, md_lbl_players, md_lbl_lastplayed, md_lbl_playcount, md_lbl_gametime, md_developer, md_publisher, md_genre, md_players, md_playcount, md_gametime, md_description, md_name">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </text>
+    <datetime name="md_releasedate, md_lastplayed">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </datetime>
+    <rating name="md_rating">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </rating>
+  </view>
+</theme>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The ES's own loading screen: the logo, the "loading system config..."
+  line and the progress bar that runs while the gamelists are parsed.
+
+  This file is NOT included from theme.xml. The ES looks for it by name at
+  the root of the theme set (Splash.cpp) and loads it on its own, before
+  any system theme exists - so theme.xml's variables are not in scope and
+  the palette has to be repeated here. Keep the two in step.
+
+  Not to be confused with the boot splash: that one is painted on /dev/fb0
+  by S15splash long before the ES starts, and lives in
+  system/board/r36s/splash/. art/logo.png is cut out of that same artwork
+  by tools/crop-logo.py, so the handover from one to the other is seamless.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <variables>
+    <bg>0b0d13FF</bg>
+    <accent>8fb0ffFF</accent>
+    <accentDeep>4d6fbfFF</accentDeep>
+    <track>1b1f2aFF</track>
+    <fgMuted>eef1f79E</fgMuted>
+    <fontMono>${themePath}/art/fonts/IBMPlexMono-Regular.ttf</fontMono>
+  </variables>
+
+  <view name="splash">
+    <splash name="splash">
+      <backgroundColor>${bg}</backgroundColor>
+    </splash>
+
+    <!-- art/logo.png carries the same background colour, so it sits on the
+         splash without an edge. 159x182 drawn at its native size. -->
+    <image name="background">
+      <path>${themePath}/art/logo.png</path>
+      <pos>0.5 0.42</pos>
+      <origin>0.5 0.5</origin>
+      <maxSize>0.2484 0.3792</maxSize>
+      <linearSmooth>true</linearSmooth>
+    </image>
+
+    <text name="label">
+      <pos>0 0.7708</pos>
+      <size>1 0.0333</size>
+      <alignment>center</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>0.0191</fontSize>
+      <color>${fgMuted}</color>
+    </text>
+
+    <!-- The track. roundCorners here is a fraction of the bar's longest
+         side (Splash.cpp turns it into a stencil radius), so 0.0125 of
+         280px is 3.5px - half of the 7px height, i.e. a pill. -->
+    <image name="progressbar">
+      <pos>0.28125 0.8542</pos>
+      <size>0.4375 0.0146</size>
+      <color>${track}</color>
+      <colorEnd>${track}</colorEnd>
+      <roundCorners>0.0125</roundCorners>
+    </image>
+    <image name="progressbar:active">
+      <color>${accent}</color>
+      <colorEnd>${accentDeep}</colorEnd>
+    </image>
+  </view>
+</theme>

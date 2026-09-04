@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  detailed: list on the left (10 rows of ~38px), box-art panel on the
+  right with a four-row metadata table: year, genre, players, rating
+  (design 3a, third screen). Everything else ES could show in this view
+  (developer, publisher, description, video...) is switched off.
+
+  Rows work like the ones in basic.xml: the name with a ★ for favourites
+  right after it, and in a collection the console at the right end of the
+  row. See views/basic.xml for why the name is {game:name}.
+
+  Panel geometry (px): x 382..628, y 61..437; cover 142x190 centred at
+  (505, 170); table rows at y 277/298/319/340, labels left, values right.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="detailed">
+    <textlist name="gamelist">
+      <pos>0.01875 0.1271</pos>
+      <size>0.5594 0.7833</size>
+      <lines>10</lines>
+      <selectorColor>${transparent}</selectorColor>
+      <selectorColorEnd>${transparent}</selectorColorEnd>
+      <primaryColor>${fgMuted}</primaryColor>
+      <secondaryColor>${fgStrong}</secondaryColor>
+      <selectedColor>${onAccent}</selectedColor>
+      <fontPath>${fontSansMedium}</fontPath>
+      <fontSize>${fsListSmall}</fontSize>
+      <alignment>left</alignment>
+      <horizontalMargin>0.0156</horizontalMargin>
+      <forceUppercase>false</forceUppercase>
+      <scrollbarColor>${transparent}</scrollbarColor>
+      <zIndex>20</zIndex>
+      <itemTemplate>
+        <image name="rowBg">
+          <path>${white}</path>
+          <pos>0 0</pos>
+          <size>1 1</size>
+          <color>${transparent}</color>
+          <roundCorners>8</roundCorners>
+          <storyboard event="activate">
+            <animation property="color" to="${accent}" duration="120" mode="easeOut"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${transparent}" duration="120" mode="easeOut"/>
+          </storyboard>
+          <container>
+            <padding>10 0 10 0</padding>
+            <stackpanel name="rowTitle" pos="0 0" size="0.78 1">
+              <orientation>horizontal</orientation>
+              <separator>6</separator>
+              <text name="rowName">
+                <text>{game:name}</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsListSmall}</fontSize>
+                <color>${fgMuted}</color>
+                <extraTextColor>${fgFaint}</extraTextColor>
+                <multiLine>false</multiLine>
+                <autoScrollDelay>400</autoScrollDelay>
+                <storyboard event="activate">
+                  <animation property="color" to="${onAccent}" duration="120"/>
+                  <animation property="singleLineScroll" to="true"/>
+                </storyboard>
+                <storyboard event="deactivate">
+                  <animation property="color" to="${fgMuted}" duration="120"/>
+                  <animation property="singleLineScroll" to="false"/>
+                </storyboard>
+              </text>
+              <text name="rowStar">
+                <text>{game:favorite} ? "★" : ""</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsMono}</fontSize>
+                <color>${accent}</color>
+                <multiLine>false</multiLine>
+                <storyboard event="activate">
+                  <animation property="color" to="${onAccent}" duration="120"/>
+                </storyboard>
+                <storyboard event="deactivate">
+                  <animation property="color" to="${accent}" duration="120"/>
+                </storyboard>
+              </text>
+            </stackpanel>
+            <text name="rowSystem" pos="0.78 0" size="0.22 1" if="system.showSystemName">
+              <text>{game:system:name}</text>
+              <alignment>right</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <forceUppercase>true</forceUppercase>
+              <fontPath>${fontMono}</fontPath>
+              <fontSize>${fsMonoSmall}</fontSize>
+              <color>${fgFaint}</color>
+              <multiLine>false</multiLine>
+              <storyboard event="activate">
+                <animation property="color" to="${onAccentMuted}" duration="120"/>
+              </storyboard>
+              <storyboard event="deactivate">
+                <animation property="color" to="${fgFaint}" duration="120"/>
+              </storyboard>
+            </text>
+          </container>
+        </image>
+      </itemTemplate>
+    </textlist>
+
+    <!-- Panel -->
+    <rectangle name="panel" extra="true">
+      <pos>0.5969 0.1271</pos>
+      <size>0.3844 0.7833</size>
+      <color>${panel}</color>
+      <borderColor>${line}</borderColor>
+      <borderSize>1</borderSize>
+      <roundCorners>12</roundCorners>
+      <zIndex>5</zIndex>
+    </rectangle>
+
+    <image name="md_image">
+      <pos>0.7891 0.354</pos>
+      <origin>0.5 0.5</origin>
+      <maxSize>0.2219 0.3958</maxSize>
+      <roundCorners>6</roundCorners>
+      <linearSmooth>true</linearSmooth>
+      <zIndex>30</zIndex>
+    </image>
+
+    <!-- Table labels -->
+    <text name="md_lbl_releasedate, md_lbl_genre, md_lbl_players, md_lbl_rating">
+      <size>0.16 0.0271</size>
+      <alignment>left</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <forceUppercase>true</forceUppercase>
+      <color>${fgSoft}</color>
+      <zIndex>40</zIndex>
+    </text>
+    <text name="md_lbl_releasedate"><pos>0.61875 0.5771</pos></text>
+    <text name="md_lbl_genre"><pos>0.61875 0.6208</pos></text>
+    <text name="md_lbl_players"><pos>0.61875 0.6646</pos></text>
+    <text name="md_lbl_rating"><pos>0.61875 0.7083</pos></text>
+
+    <!-- Table values: right column, long values get an ellipsis -->
+    <datetime name="md_releasedate">
+      <pos>0.70 0.5771</pos>
+      <size>0.259 0.0271</size>
+      <alignment>right</alignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <format>%Y</format>
+      <color>${fg}</color>
+      <zIndex>41</zIndex>
+    </datetime>
+    <text name="md_genre, md_players">
+      <size>0.259 0.0271</size>
+      <alignment>right</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <color>${fg}</color>
+      <multiLine>false</multiLine>
+      <zIndex>41</zIndex>
+    </text>
+    <text name="md_genre"><pos>0.70 0.6208</pos></text>
+    <text name="md_players"><pos>0.70 0.6646</pos></text>
+    <rating name="md_rating">
+      <pos>0.70 0.7083</pos>
+      <size>0.259 0.0271</size>
+      <horizontalAlignment>right</horizontalAlignment>
+      <color>${accent}</color>
+      <unfilledColor>${starOff}</unfilledColor>
+      <unfilledPath>:/star_filled.svg</unfilledPath>
+      <zIndex>40</zIndex>
+    </rating>
+
+    <!-- Everything else: off -->
+    <text name="md_lbl_developer, md_lbl_publisher, md_lbl_lastplayed, md_lbl_playcount, md_lbl_gametime, md_lbl_favorite, md_developer, md_publisher, md_playcount, md_gametime, md_favorite, md_description, md_name">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </text>
+    <datetime name="md_lastplayed">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </datetime>
+  </view>
+</theme>

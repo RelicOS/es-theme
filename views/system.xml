@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  System view (design 3a, first screen).
+
+  Top half (0..240px): system art, darkened towards the bottom, with the
+  full system name (46px bold) and a "N GAMES · M FAVORITES" mono line.
+  Bottom half: a horizontal carousel of 5 tiles. Each tile - frame, fill
+  and name - is drawn by the carousel's itemTemplate, so the frames move
+  and grow with the scroll instead of standing still behind the names.
+
+  Carousel math, all of it measured on the host at 640x480.
+
+  logoSize is the *unselected* tile and is relative to the screen (in the
+  system view the ES multiplies logoSize by the screen size, not by the
+  carousel): 92/640 x 92/480. The template box is logoSize x logoScale =
+  124x124, and the ES scales it between 1/logoScale and 1 by distance
+  from the cursor, around its centre - so a tile is 92px at rest, 124px
+  when selected, and every value in between while scrolling.
+
+  Spacing is always width / maxLogoCount, here 735/7 = 105px, and
+  scaledLogoSpacing 0.876 pushes every unselected tile 16px outwards, so
+  all the gaps are the same 13px.
+
+  The band is 735px wide on a 640px screen, hanging 47.5px off each side,
+  because the carousel clips to its own bounds: a band only as wide as
+  the five design tiles slices the outer two, and a band that stops on
+  the screen edge leaves the rail floating in the middle. Seven slots at
+  105px put tile centres on -11, 94, 199, 320, 441, 546 and 651, so the
+  rail runs off both edges with a tile half-showing at each one. Slots
+  further out (+-4 and beyond) land past 640 and are never seen.
+
+  One caveat: the ES draws slots, not systems, and wraps the list to fill
+  them. With fewer than seven systems the same system shows up twice on
+  the rail. That is the ES's own behaviour at any maxLogoCount, just more
+  visible here.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="system">
+    <!-- Background -->
+    <image name="bg" extra="true">
+      <path>${white}</path>
+      <pos>0 0</pos>
+      <size>1 1</size>
+      <color>${bg}</color>
+      <zIndex>0</zIndex>
+    </image>
+
+    <!-- Hero art: per-system file first, generic placeholder underneath -->
+    <image name="heroDefault" extra="true">
+      <path>${themePath}/art/systems/default.png</path>
+      <pos>0.5 0.25</pos>
+      <origin>0.5 0.5</origin>
+      <minSize>1 0.5</minSize>
+      <linearSmooth>true</linearSmooth>
+      <zIndex>1</zIndex>
+    </image>
+    <image name="hero" extra="true">
+      <path>${themePath}/art/systems/${system.theme}.png</path>
+      <pos>0.5 0.25</pos>
+      <origin>0.5 0.5</origin>
+      <minSize>1 0.5</minSize>
+      <linearSmooth>true</linearSmooth>
+      <zIndex>2</zIndex>
+    </image>
+    <image name="heroFade" extra="true">
+      <path>${white}</path>
+      <pos>0 0</pos>
+      <size>1 0.5</size>
+      <color>0b0d1333</color>
+      <colorEnd>${bg}</colorEnd>
+      <gradientType>vertical</gradientType>
+      <zIndex>3</zIndex>
+    </image>
+
+    <!-- OSD: clock left, battery right -->
+    <clock name="sysClock" extra="true">
+      <pos>0.034375 0.029</pos>
+      <size>0.2 0.0292</size>
+      <alignment>left</alignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <color>${fgClock}</color>
+      <zIndex>6</zIndex>
+    </clock>
+    <batteryIcon name="sysBattery" extra="true">
+      <pos>0.965625 0.027</pos>
+      <origin>1 0</origin>
+      <size>0.034375 0</size>
+      <full>${themePath}/art/icons/battery-full.svg</full>
+      <at75>${themePath}/art/icons/battery-75.svg</at75>
+      <at50>${themePath}/art/icons/battery-50.svg</at50>
+      <at25>${themePath}/art/icons/battery-25.svg</at25>
+      <empty>${themePath}/art/icons/battery-empty.svg</empty>
+      <incharge>${themePath}/art/icons/battery-charging.svg</incharge>
+      <zIndex>6</zIndex>
+    </batteryIcon>
+
+    <!-- System name + counts, bottom-left of the hero -->
+    <text name="heroTitle" extra="true">
+      <text>${system.fullName}</text>
+      <pos>0.034375 0.3125</pos>
+      <size>0.93 0.108</size>
+      <alignment>left</alignment>
+      <verticalAlignment>bottom</verticalAlignment>
+      <fontPath>${fontSansBold}</fontPath>
+      <fontSize>${fsHero}</fontSize>
+      <lineSpacing>1</lineSpacing>
+      <color>${fg}</color>
+      <multiLine>false</multiLine>
+      <zIndex>5</zIndex>
+    </text>
+    <text name="heroCount" extra="true">
+      <!-- Keep this a flat concatenation: a ternary inside parentheses
+           made the ES's expression engine give up and print the source. -->
+      <text>tostring({system:total}) + " GAMES · " + tostring({system:favorites}) + " FAVORITES"</text>
+      <text lang="pt">tostring({system:total}) + " JOGOS · " + tostring({system:favorites}) + " FAVORITOS"</text>
+      <text lang="br">tostring({system:total}) + " JOGOS · " + tostring({system:favorites}) + " FAVORITOS"</text>
+      <pos>0.034375 0.4354</pos>
+      <size>0.93 0.0292</size>
+      <alignment>left</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <forceUppercase>true</forceUppercase>
+      <color>${accent}</color>
+      <zIndex>5</zIndex>
+    </text>
+
+    <!-- The carousel: a transparent band, every tile drawn by the template -->
+    <carousel name="systemcarousel">
+      <type>horizontal</type>
+      <pos>-0.0742 0.5833</pos>
+      <size>1.1484 0.2583</size>
+      <origin>0 0</origin>
+      <color>${transparent}</color>
+      <colorEnd>${transparent}</colorEnd>
+      <logoSize>0.14375 0.1916667</logoSize>
+      <logoScale>1.348</logoScale>
+      <scaledLogoSpacing>0.876</scaledLogoSpacing>
+      <maxLogoCount>7</maxLogoCount>
+      <logoAlignment>center</logoAlignment>
+      <minLogoOpacity>1</minLogoOpacity>
+      <systemInfoDelay>1000000</systemInfoDelay>
+      <!-- The hero art and the big system name are per-system extras. With
+           the ES's default "slide" they change in one step with the tiles;
+           "fade &amp; slide" crossfades them and nudges them 13px sideways.
+           transitionSpeed is the length of both the tile scroll and that
+           crossfade. Both are only used while TRANSITION STYLE is "auto". -->
+      <defaultTransition>fade &amp; slide</defaultTransition>
+      <transitionSpeed>350</transitionSpeed>
+      <zIndex>40</zIndex>
+      <!-- One template per system, bound to that system (a static
+           ${system.name} here would show the current system in every slot).
+           The whole box is scaled by the carousel, so the frame, the fill
+           and the name grow together as a tile becomes the selection. -->
+      <itemTemplate>
+        <!-- The frame is two filled rounded rectangles, the inner one
+             2px smaller on every side: `rectangle` draws its fill but
+             never its border on this ES (checked on the host - the same
+             is true of the borders in grid.xml and detailed.xml), so a
+             ring has to be drawn as the gap between two fills. -->
+        <container name="tile" pos="0 0" size="1 1">
+        <image name="tileFrame" pos="0 0" size="1 1">
+          <path>${white}</path>
+          <color>${lineStrong}</color>
+          <roundCorners>14</roundCorners>
+          <zIndex>1</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${accent}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${lineStrong}" duration="150"/>
+          </storyboard>
+        </image>
+        <image name="tileBg" pos="0.5 0.5" origin="0.5 0.5" size="0.9677 0.9677">
+          <path>${white}</path>
+          <color>${panelOnBg}</color>
+          <roundCorners>12</roundCorners>
+          <zIndex>2</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${accentTintOnBg}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${panelOnBg}" duration="150"/>
+          </storyboard>
+        </image>
+        <image name="tileLogo" pos="0.5 0.5" origin="0.5 0.5" maxSize="0.8 0.8">
+          <visible>exists({system:logo})</visible>
+          <path>{system:logo}</path>
+          <linearSmooth>true</linearSmooth>
+          <zIndex>4</zIndex>
+        </image>
+        <text name="tileName" pos="0 0" size="1 1">
+          <visible>!exists({system:logo})</visible>
+          <text>{system:name}</text>
+          <alignment>center</alignment>
+          <verticalAlignment>center</verticalAlignment>
+          <forceUppercase>true</forceUppercase>
+          <fontPath>${fontSansSemiBold}</fontPath>
+          <fontSize>${fsTile}</fontSize>
+          <lineSpacing>1</lineSpacing>
+          <color>${fgMuted}</color>
+          <multiLine>false</multiLine>
+          <zIndex>5</zIndex>
+          <storyboard event="activate">
+            <animation property="color" to="${fg}" duration="150"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${fgMuted}" duration="150"/>
+          </storyboard>
+        </text>
+        </container>
+      </itemTemplate>
+    </carousel>
+    <!-- Drop an SVG at art/logos/<system.theme>.svg to replace the text tile -->
+    <image name="logo">
+      <path>${themePath}/art/logos/${system.theme}.svg</path>
+    </image>
+
+    <!-- ES's "N games available" line: off, the hero already says it -->
+    <text name="systemInfo">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+      <color>${transparent}</color>
+      <backgroundColor>${transparent}</backgroundColor>
+    </text>
+
+    <!-- Footer hairline + help bar. The hairline is the help bar's top
+         edge, so it goes away with it (ON-SCREEN HELP off). -->
+    <rectangle name="footerLine" extra="true" ifHelpPrompts="true">
+      <pos>0 0.9271</pos>
+      <size>1 0.0021</size>
+      <color>${line}</color>
+      <borderSize>0</borderSize>
+      <zIndex>12</zIndex>
+    </rectangle>
+    <helpsystem name="help">
+      <pos>0.034375 0.945</pos>
+      <origin>0 0</origin>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMonoSmall}</fontSize>
+      <textColor>${fgSoft}</textColor>
+      <iconColor>${accent}</iconColor>
+    </helpsystem>
+  </view>
+</theme>

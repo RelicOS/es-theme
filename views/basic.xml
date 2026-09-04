@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  basic: names only, 9 rows of 42px (design 3a, second screen).
+  The row is an itemTemplate: a rounded block that turns accent when the
+  row is selected, the name and a ★ for favourites on the left, the year
+  on the right (only visible on the selected row).
+
+  In a collection (favorites, all games, last played) the right-hand slot
+  holds the console the game comes from instead of the year, so the row
+  reads "name ... console". system.showSystemName is the ES's own switch
+  for that (GAME COLLECTION SETTINGS > SHOW SYSTEM NAME IN COLLECTIONS);
+  it is a theme variable, so the two elements are picked at load time.
+
+  The name is {game:name}, not {grid:label}: the label is the ES's
+  formatted one, which already carries the ★ as a prefix and the console
+  as a "[...]" suffix, and both are placed by hand here.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="basic">
+    <textlist name="gamelist">
+      <pos>0.01875 0.125</pos>
+      <size>0.9625 0.7875</size>
+      <lines>9</lines>
+      <selectorColor>${transparent}</selectorColor>
+      <selectorColorEnd>${transparent}</selectorColorEnd>
+      <primaryColor>${fgMuted}</primaryColor>
+      <secondaryColor>${fgStrong}</secondaryColor>
+      <selectedColor>${onAccent}</selectedColor>
+      <fontPath>${fontSansMedium}</fontPath>
+      <fontSize>${fsList}</fontSize>
+      <alignment>left</alignment>
+      <horizontalMargin>0.0156</horizontalMargin>
+      <forceUppercase>false</forceUppercase>
+      <scrollbarColor>${transparent}</scrollbarColor>
+      <zIndex>20</zIndex>
+      <itemTemplate>
+        <image name="rowBg">
+          <path>${white}</path>
+          <pos>0 0</pos>
+          <size>1 1</size>
+          <color>${transparent}</color>
+          <roundCorners>8</roundCorners>
+          <storyboard event="activate">
+            <animation property="color" to="${accent}" duration="120" mode="easeOut"/>
+          </storyboard>
+          <storyboard event="deactivate">
+            <animation property="color" to="${transparent}" duration="120" mode="easeOut"/>
+          </storyboard>
+          <container>
+            <padding>10 0 10 0</padding>
+            <!-- Name then star: the stackpanel gives each text its own
+                 width, so the ★ sits against the end of the name however
+                 long the name is. separator is in px when it is >= 1. -->
+            <stackpanel name="rowTitle" pos="0 0" size="0.74 1">
+              <orientation>horizontal</orientation>
+              <separator>7</separator>
+              <text name="rowName">
+                <text>{game:name}</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsList}</fontSize>
+                <color>${fgMuted}</color>
+                <extraTextColor>${fgFaint}</extraTextColor>
+                <multiLine>false</multiLine>
+                <autoScrollDelay>400</autoScrollDelay>
+                <storyboard event="activate">
+                  <animation property="color" to="${onAccent}" duration="120"/>
+                  <animation property="singleLineScroll" to="true"/>
+                </storyboard>
+                <storyboard event="deactivate">
+                  <animation property="color" to="${fgMuted}" duration="120"/>
+                  <animation property="singleLineScroll" to="false"/>
+                </storyboard>
+              </text>
+              <text name="rowStar">
+                <text>{game:favorite} ? "★" : ""</text>
+                <alignment>left</alignment>
+                <verticalAlignment>center</verticalAlignment>
+                <fontPath>${fontSansMedium}</fontPath>
+                <fontSize>${fsListSmall}</fontSize>
+                <color>${accent}</color>
+                <multiLine>false</multiLine>
+                <storyboard event="activate">
+                  <animation property="color" to="${onAccent}" duration="120"/>
+                </storyboard>
+                <storyboard event="deactivate">
+                  <animation property="color" to="${accent}" duration="120"/>
+                </storyboard>
+              </text>
+            </stackpanel>
+            <text name="rowMeta" pos="0.74 0" size="0.26 1" if="system.showSystemName == 0">
+              <text>{game:releaseyear}</text>
+              <alignment>right</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <fontPath>${fontMonoMedium}</fontPath>
+              <fontSize>${fsMono}</fontSize>
+              <color>${onAccentMuted}</color>
+              <opacity>0</opacity>
+              <multiLine>false</multiLine>
+              <storyboard event="activate">
+                <animation property="opacity" to="1" duration="120"/>
+              </storyboard>
+              <storyboard event="deactivate">
+                <animation property="opacity" to="0" duration="80"/>
+              </storyboard>
+            </text>
+            <text name="rowSystem" pos="0.74 0" size="0.26 1" if="system.showSystemName">
+              <text>{game:system:name}</text>
+              <alignment>right</alignment>
+              <verticalAlignment>center</verticalAlignment>
+              <forceUppercase>true</forceUppercase>
+              <fontPath>${fontMono}</fontPath>
+              <fontSize>${fsMonoSmall}</fontSize>
+              <color>${fgFaint}</color>
+              <multiLine>false</multiLine>
+              <storyboard event="activate">
+                <animation property="color" to="${onAccentMuted}" duration="120"/>
+              </storyboard>
+              <storyboard event="deactivate">
+                <animation property="color" to="${fgFaint}" duration="120"/>
+              </storyboard>
+            </text>
+          </container>
+        </image>
+      </itemTemplate>
+    </textlist>
+  </view>
+</theme>

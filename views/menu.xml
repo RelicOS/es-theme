@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ES menus and popups in the same palette.
+
+  What a theme can actually change here is short: the five menu fonts and
+  their colours, the selector bar, the row separator, the background, the
+  scrollbar, and the art for switches, sliders and buttons. Everything
+  about the layout is compiled in - on a screen 480px tall or less the ES
+  draws menus full-screen, the horizontal padding is a fixed 10px, and a
+  row is exactly as tall as the text in it. There is no padding property
+  for a menu row: the only lever is the font size, which grows the text
+  along with the row, so the rows stay at the size the text wants to be
+  and that is that. menutext at 0.0320 is a 19px font in ~27px rows.
+
+  Group headers are the exception: menuGroup does expose lineSpacing, and
+  a row's height is the font height times that. So the categories get a
+  15px font at 1.9 line spacing - a band about 28px tall - on an accent
+  tint, which is what makes them read as section breaks rather than as
+  small grey text wedged between two entries.
+
+  The other half of "cramped" was the hairline under every single row.
+  It is off now (separatorColor transparent); the accent selector bar is
+  enough to say where you are, and the group headers carry the structure.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="menu">
+    <menuBackground name="menubg">
+      <color>${menuBg}</color>
+      <centerColor>${menuBg}</centerColor>
+      <scrollbarColor>${lineStrong}</scrollbarColor>
+      <scrollbarSize>3</scrollbarSize>
+      <scrollbarCorner>2</scrollbarCorner>
+      <scrollbarAlignment>outer right</scrollbarAlignment>
+    </menuBackground>
+
+    <menuText name="menutitle">
+      <fontPath>${fontSansBold}</fontPath>
+      <fontSize>${fsMenuTitle}</fontSize>
+      <color>${fg}</color>
+    </menuText>
+    <menuText name="menufooter">
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMonoSmall}</fontSize>
+      <color>${fgSoft}</color>
+    </menuText>
+
+    <menuText name="menutext">
+      <fontPath>${fontSans}</fontPath>
+      <fontSize>${fsMenuRow}</fontSize>
+      <color>${fgStrong}</color>
+      <selectedColor>${onAccent}</selectedColor>
+      <selectorColor>${accent}</selectorColor>
+      <selectorColorEnd>${accent}</selectorColorEnd>
+      <separatorColor>${transparent}</separatorColor>
+    </menuText>
+
+    <!-- Section headers: uppercase mono on a faint band, so the list reads
+         as groups rather than one long run of rows. -->
+    <menuGroup name="menugroup">
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>${fsMenuGroup}</fontSize>
+      <lineSpacing>1.9</lineSpacing>
+      <alignment>left</alignment>
+      <color>${accent}</color>
+      <backgroundColor>${accentTint}</backgroundColor>
+      <separatorColor>${transparent}</separatorColor>
+    </menuGroup>
+
+    <menuTextSmall name="menutextsmall">
+      <fontPath>${fontSans}</fontPath>
+      <fontSize>${fsCard}</fontSize>
+      <color>${fgMuted}</color>
+    </menuTextSmall>
+
+    <helpsystem name="help">
+      <pos>0.034375 0.945</pos>
+      <origin>0 0</origin>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMonoSmall}</fontSize>
+      <textColor>${fgSoft}</textColor>
+      <iconColor>${accent}</iconColor>
+    </helpsystem>
+  </view>
+</theme>

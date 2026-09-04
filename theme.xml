@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RelicOS theme for EmulationStation (batocera-emulationstation, KNULLI lineage).
+
+  Designed at the R36S native 640x480. Every coordinate below is px/640 (x)
+  or px/480 (y); font sizes are px/480. Values >= 1 in roundCorners and
+  borderSize are pixels.
+
+  Views:
+    system        hero art, big system name, tile rail (5 slots)
+    basic         plain list, 9 rows, full-block selection
+    detailed      list + box-art panel with a metadata table   (default when art exists)
+    grid          3x2 cover cards
+    gamecarousel  large cover carousel, title + metadata below
+
+  The user picks the games-page layout in UI SETTINGS > GAMELIST VIEW STYLE
+  (or per system in that system's view options).
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <variables>
+    <!-- Palette (RRGGBBAA) -->
+    <bg>0b0d13FF</bg>
+    <fg>eef1f7FF</fg>
+    <accent>8fb0ffFF</accent>
+    <accentTint>8fb0ff1F</accentTint>
+    <onAccent>0b0d13FF</onAccent>
+    <onAccentMuted>0b0d13B8</onAccentMuted>
+    <fgStrong>eef1f7D1</fgStrong>
+    <fgMuted>eef1f79E</fgMuted>
+    <fgSoft>eef1f785</fgSoft>
+    <fgFaint>eef1f766</fgFaint>
+    <fgClock>eef1f7C7</fgClock>
+    <panel>eef1f70B</panel>
+    <line>eef1f71A</line>
+    <lineStrong>eef1f721</lineStrong>
+    <starOff>eef1f733</starOff>
+    <!-- ${panel} and ${accentTint} already composited over ${bg}. A frame
+         built from two filled rounded rectangles needs the inner one to be
+         opaque, or the ring colour shows through it. -->
+    <panelOnBg>15171DFF</panelOnBg>
+    <accentTintOnBg>1B2130FF</accentTintOnBg>
+    <transparent>00000000</transparent>
+    <menuBg>11141cF8</menuBg>
+
+    <!-- Fonts (IBM Plex, OFL). See tools/fetch-fonts.sh -->
+    <fontSans>${themePath}/art/fonts/IBMPlexSans-Regular.ttf</fontSans>
+    <fontSansMedium>${themePath}/art/fonts/IBMPlexSans-Medium.ttf</fontSansMedium>
+    <fontSansSemiBold>${themePath}/art/fonts/IBMPlexSans-SemiBold.ttf</fontSansSemiBold>
+    <fontSansBold>${themePath}/art/fonts/IBMPlexSans-Bold.ttf</fontSansBold>
+    <fontMono>${themePath}/art/fonts/IBMPlexMono-Regular.ttf</fontMono>
+    <fontMonoMedium>${themePath}/art/fonts/IBMPlexMono-Medium.ttf</fontMonoMedium>
+
+    <!-- Shared assets -->
+    <white>${themePath}/art/white.png</white>
+
+    <!-- Type scale: px / 480 / 1.31. The ES multiplies every theme font
+         size by 1.31 when the smaller screen dimension is under 720px
+         (Renderer::ScreenSettings::fontScale), so the values here are
+         pre-divided to land on the pixel sizes from the design. -->
+    <fsHero>0.0731</fsHero>       <!-- 46px -->
+    <fsTitle>0.0477</fsTitle>     <!-- 30px -->
+    <fsHeader>0.0286</fsHeader>   <!-- 18px -->
+    <fsList>0.0302</fsList>       <!-- 19px -->
+    <fsListSmall>0.0270</fsListSmall> <!-- 17px -->
+    <fsTile>0.0302</fsTile>       <!-- 19px, x1.35 when selected -->
+    <fsCard>0.0223</fsCard>       <!-- 14px -->
+    <fsMono>0.0207</fsMono>       <!-- 13px -->
+    <fsMonoSmall>0.0191</fsMonoSmall> <!-- 12px -->
+    <fsMonoTiny>0.0175</fsMonoTiny>   <!-- 11px -->
+    <fsMenuTitle>0.0382</fsMenuTitle> <!-- 24px -->
+    <fsMenuRow>0.0320</fsMenuRow>     <!-- 19px, sets the menu row height -->
+    <fsMenuGroup>0.0270</fsMenuGroup> <!-- 15px, the category headers -->
+  </variables>
+
+  <include>./views/chrome.xml</include>
+  <include>./views/system.xml</include>
+  <include>./views/basic.xml</include>
+  <include>./views/detailed.xml</include>
+  <include>./views/grid.xml</include>
+  <include>./views/gamecarousel.xml</include>
+  <include>./views/menu.xml</include>
+</theme>

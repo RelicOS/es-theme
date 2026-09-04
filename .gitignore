@@ -1,0 +1,5 @@
+*.log
+.DS_Store
+
+# IBM Plex, fetched on demand by tools/fetch-fonts.sh (see the README).
+art/fonts/

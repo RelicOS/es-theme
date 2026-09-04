@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Chrome shared by every games-page view: background, 53px header
+  (system name left, game count right), hairlines, hidden ES header logo,
+  and the help bar style. The system view has its own chrome in system.xml.
+-->
+<theme>
+  <formatVersion>7</formatVersion>
+
+  <view name="basic, detailed, grid, gamecarousel">
+    <image name="bg" extra="true">
+      <path>${white}</path>
+      <pos>0 0</pos>
+      <size>1 1</size>
+      <color>${bg}</color>
+      <zIndex>1</zIndex>
+    </image>
+
+    <!-- ES's own header logo/text: off -->
+    <text name="logoText">
+      <visible>false</visible>
+    </text>
+    <image name="logo">
+      <visible>false</visible>
+    </image>
+
+    <!-- Header: 0..53px -->
+    <text name="headerTitle" extra="true">
+      <text>${system.fullName}</text>
+      <pos>0.034375 0</pos>
+      <size>0.52 0.1104</size>
+      <alignment>left</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontSansSemiBold}</fontPath>
+      <fontSize>${fsHeader}</fontSize>
+      <color>${fg}</color>
+      <multiLine>false</multiLine>
+      <zIndex>12</zIndex>
+    </text>
+    <text name="headerCount" extra="true">
+      <text>tostring({system:total}) + " games"</text>
+      <text lang="pt">tostring({system:total}) + " jogos"</text>
+      <text lang="br">tostring({system:total}) + " jogos"</text>
+      <pos>0.55 0</pos>
+      <size>0.415625 0.1104</size>
+      <alignment>right</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMono}</fontSize>
+      <color>${fgFaint}</color>
+      <multiLine>false</multiLine>
+      <zIndex>12</zIndex>
+    </text>
+    <rectangle name="headerLine" extra="true">
+      <pos>0 0.1104</pos>
+      <size>1 0.0021</size>
+      <color>${line}</color>
+      <borderSize>0</borderSize>
+      <zIndex>12</zIndex>
+    </rectangle>
+
+    <!-- Footer hairline above the help bar: y = 445px. It is the bar's
+         top edge, so it goes with it when ON-SCREEN HELP is off. -->
+    <rectangle name="footerLine" extra="true" ifHelpPrompts="true">
+      <pos>0 0.9271</pos>
+      <size>1 0.0021</size>
+      <color>${line}</color>
+      <borderSize>0</borderSize>
+      <zIndex>12</zIndex>
+    </rectangle>
+
+    <helpsystem name="help">
+      <pos>0.034375 0.945</pos>
+      <origin>0 0</origin>
+      <fontPath>${fontMono}</fontPath>
+      <fontSize>${fsMonoSmall}</fontSize>
+      <textColor>${fgSoft}</textColor>
+      <iconColor>${accent}</iconColor>
+    </helpsystem>
+  </view>
+
+  <!-- Global OSD (drawn over every view). The design has clock and battery
+       on the system view only, and that view draws its own; the ES-wide
+       clock and the wifi/battery strip would collide with the games-page
+       header, so both are parked off-screen. -->
+  <view name="screen">
+    <text name="clock">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </text>
+    <batteryIndicator name="batteryIndicator">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </batteryIndicator>
+    <controllerActivity name="controllerActivity">
+      <visible>false</visible>
+      <pos>1 1</pos>
+      <size>0 0</size>
+    </controllerActivity>
+  </view>
+</theme>
