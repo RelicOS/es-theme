@@ -80,12 +80,15 @@
     </image>
 
     <!-- OSD: clock left, battery right -->
+    <!-- The clock is a 24px-tall box whose middle (y = 18.5px) is the
+         middle of the battery glyph (24x12 drawn 22px wide at y = 13). -->
     <clock name="sysClock" extra="true">
-      <pos>0.034375 0.029</pos>
-      <size>0.2 0.0292</size>
+      <pos>0.034375 0.0135</pos>
+      <size>0.3 0.05</size>
       <alignment>left</alignment>
-      <fontPath>${fontMono}</fontPath>
-      <fontSize>${fsMono}</fontSize>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>${fsClock}</fontSize>
       <color>${fgClock}</color>
       <zIndex>6</zIndex>
     </clock>
@@ -103,8 +106,10 @@
     </batteryIcon>
 
     <!-- System name + counts, bottom-left of the hero -->
+    <!-- Collections are named in lower case by the ES ("favorites", "all
+         games"); see the note on headerTitle in chrome.xml. -->
     <text name="heroTitle" extra="true">
-      <text>${system.fullName}</text>
+      <text>{system:collection} ? proper({system:fullName}) : {system:fullName}</text>
       <pos>0.034375 0.3125</pos>
       <size>0.93 0.108</size>
       <alignment>left</alignment>
@@ -249,11 +254,18 @@
       <borderSize>0</borderSize>
       <zIndex>12</zIndex>
     </rectangle>
+    <!-- The bar is one row of [icon][text] pairs, as tall as 1.25 x the
+         cap height of its font; anchored by its left-middle at the middle
+         of the 35px band under the hairline (445..480), so it stays
+         centred whatever the font. The gaps are not ours: the ES hardcodes
+         icon-to-text at 0.42% of the screen width and pair-to-pair at
+         twice that (HelpComponent.cpp, ICON_TEXT_SPACING / ENTRY_SPACING),
+         2.7px and 5.4px at 640 - a theme cannot widen them. -->
     <helpsystem name="help">
-      <pos>0.034375 0.945</pos>
-      <origin>0 0</origin>
+      <pos>0.034375 0.9635</pos>
+      <origin>0 0.5</origin>
       <fontPath>${fontMono}</fontPath>
-      <fontSize>${fsMonoSmall}</fontSize>
+      <fontSize>${fsMono}</fontSize>
       <textColor>${fgSoft}</textColor>
       <iconColor>${accent}</iconColor>
     </helpsystem>

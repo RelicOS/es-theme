@@ -50,9 +50,10 @@ tools/               asset generator and font fetcher
 ```
 
 Coordinates in the XML are `px/640` for x and `px/480` for y. Font sizes are
-`px/480/1.31`: the ES multiplies every theme font by 1.31 on screens under
-720px, so the type scale in `theme.xml` is pre-divided. Radii and border
-widths ≥ 1 are pixels.
+`px/480/1.31`, roughly: the ES multiplies every theme font by 1.31 on screens
+under 720px, truncating to whole pixels twice on the way (see the note on
+the type scale in `theme.xml` - not every pixel size is reachable). Radii and
+border widths ≥ 1 are pixels.
 
 ## Fonts
 

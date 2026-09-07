@@ -55,20 +55,31 @@
     <!-- Shared assets -->
     <white>${themePath}/art/white.png</white>
 
-    <!-- Type scale: px / 480 / 1.31. The ES multiplies every theme font
-         size by 1.31 when the smaller screen dimension is under 720px
-         (Renderer::ScreenSettings::fontScale), so the values here are
-         pre-divided to land on the pixel sizes from the design. -->
-    <fsHero>0.0731</fsHero>       <!-- 46px -->
-    <fsTitle>0.0477</fsTitle>     <!-- 30px -->
-    <fsHeader>0.0286</fsHeader>   <!-- 18px -->
-    <fsList>0.0302</fsList>       <!-- 19px -->
-    <fsListSmall>0.0270</fsListSmall> <!-- 17px -->
-    <fsTile>0.0302</fsTile>       <!-- 19px, x1.35 when selected -->
-    <fsCard>0.0223</fsCard>       <!-- 14px -->
-    <fsMono>0.0207</fsMono>       <!-- 13px -->
-    <fsMonoSmall>0.0191</fsMonoSmall> <!-- 12px -->
-    <fsMonoTiny>0.0175</fsMonoTiny>   <!-- 11px -->
+    <!-- Type scale. The ES turns a theme fontSize into pixels in two
+         truncating steps: int(480 x fontSize), then int(that x 1.31) - the
+         1.31 is Renderer::ScreenSettings::fontScale for screens under
+         720px (Font::getFromTheme, then Font::get). So the pixel size is
+         a staircase, not a line: 9 -> 11px, 10 -> 13, 11 -> 14, 12 -> 15,
+         13 -> 17, 14 -> 18, 15 -> 19, 22 -> 28, 23 -> 30, 35 -> 45,
+         36 -> 47 (12, 16, 21, 46px do not exist). The comments give the
+         px each value actually lands on; the design asked for 46/30/18/
+         19/17/19/14/13/12/11 and most are one px under it - retune
+         with the table above when a view is revisited. -->
+    <fsHero>0.0731</fsHero>       <!-- 35 -> 45px (46 is not reachable) -->
+    <fsTitle>0.0477</fsTitle>     <!-- 22 -> 28px -->
+    <fsHeader>0.0286</fsHeader>   <!-- 13 -> 17px -->
+    <fsList>0.0302</fsList>       <!-- 14 -> 18px -->
+    <fsListSmall>0.0270</fsListSmall> <!-- 12 -> 15px -->
+    <fsTile>0.0302</fsTile>       <!-- 14 -> 18px, x1.35 when selected -->
+    <fsCard>0.0223</fsCard>       <!-- 10 -> 13px -->
+    <fsMono>0.0219</fsMono>       <!-- 10 -> 13px (was 0.0207 = 9 -> 11px, the
+                                       same font as fsMonoSmall; the help
+                                       bar and every mono label wear it) -->
+    <fsMonoSmall>0.0191</fsMonoSmall> <!-- 9 -> 11px (12 is not reachable) -->
+    <fsMonoTiny>0.0175</fsMonoTiny>   <!-- 8 -> 10px (grid.xml's star math
+                                           counts on this) -->
+    <fsClock>0.0323</fsClock>     <!-- 15 -> 19px; the system view's clock.
+                                       11px on the R36S was unreadable. -->
     <fsMenuTitle>0.0382</fsMenuTitle> <!-- 24px -->
     <fsMenuRow>0.0320</fsMenuRow>     <!-- 19px, sets the menu row height -->
     <fsMenuGroup>0.0270</fsMenuGroup> <!-- 15px, the category headers -->
