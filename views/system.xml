@@ -80,10 +80,13 @@
     </image>
 
     <!-- OSD: clock left, battery right -->
-    <!-- The clock is a 24px-tall box whose middle (y = 18.5px) is the
-         middle of the battery glyph (24x12 drawn 22px wide at y = 13). -->
+    <!-- The clock is a 24px-tall box centred 2px above the battery glyph's
+         middle (y = 18.5px): verticalAlignment centres the whole line box,
+         descender included, and the digits sit ~2px below its middle, so
+         the box goes up 2px to put the digits on the glyph's centre line
+         (measured on the host at 6x). The battery number uses the same box. -->
     <clock name="sysClock" extra="true">
-      <pos>0.034375 0.0135</pos>
+      <pos>0.034375 0.0094</pos>
       <size>0.3 0.05</size>
       <alignment>left</alignment>
       <verticalAlignment>center</verticalAlignment>
@@ -92,10 +95,19 @@
       <color>${fgClock}</color>
       <zIndex>6</zIndex>
     </clock>
-    <batteryIcon name="sysBattery" extra="true">
-      <pos>0.965625 0.027</pos>
+    <!-- Battery, top right, in the same 24px box as the clock and at the
+         clock's scale: the glyph is the design's 22x11 box drawn at 32x16
+         (art/icons), the level in 19px Plex Mono Medium. Which layout is
+         UI SETTINGS > SHOW BATTERY STATUS, exposed as global.battery.text
+         by ES patch 0004 (RelicOS) and re-read on change: with text, the
+         glyph sits left of the number with a 6px gap; icon only, the glyph
+         is flush with the margin where the number would end. The number is
+         auto-width (size x = 0) so the gap holds for "9%", "45%", "100%";
+         its right edge moves by a digit instead. -->
+    <batteryIcon name="sysBattery" extra="true" if="global.battery.text == 0">
+      <pos>0.965625 0.0219</pos>
       <origin>1 0</origin>
-      <size>0.034375 0</size>
+      <size>0.05 0</size>
       <full>${themePath}/art/icons/battery-full.svg</full>
       <at75>${themePath}/art/icons/battery-75.svg</at75>
       <at50>${themePath}/art/icons/battery-50.svg</at50>
@@ -104,6 +116,28 @@
       <incharge>${themePath}/art/icons/battery-charging.svg</incharge>
       <zIndex>6</zIndex>
     </batteryIcon>
+    <batteryIcon name="sysBattery" extra="true" if="global.battery.text">
+      <pos>0.853 0.0219</pos>
+      <origin>0 0</origin>
+      <size>0.05 0</size>
+      <full>${themePath}/art/icons/battery-full.svg</full>
+      <at75>${themePath}/art/icons/battery-75.svg</at75>
+      <at50>${themePath}/art/icons/battery-50.svg</at50>
+      <at25>${themePath}/art/icons/battery-25.svg</at25>
+      <empty>${themePath}/art/icons/battery-empty.svg</empty>
+      <incharge>${themePath}/art/icons/battery-charging.svg</incharge>
+      <zIndex>6</zIndex>
+    </batteryIcon>
+    <batteryText name="sysBatteryText" extra="true" if="global.battery.text">
+      <pos>0.9125 0.0094</pos>
+      <size>0 0.05</size>
+      <alignment>left</alignment>
+      <verticalAlignment>center</verticalAlignment>
+      <fontPath>${fontMonoMedium}</fontPath>
+      <fontSize>${fsClock}</fontSize>
+      <color>${fgClock}</color>
+      <zIndex>6</zIndex>
+    </batteryText>
 
     <!-- System name + counts, bottom-left of the hero -->
     <!-- Collections are named in lower case by the ES ("favorites", "all
